@@ -20,7 +20,6 @@ export default function MiniHeader({ label }) {
           fontFamily: "SpaceGroteskMedium",
         }}
       >
-        View all
       </Text>
     </View>
   );

@@ -181,32 +181,3 @@ export default function NewsSection({ newsProps }) {
     </View>
   );
 }
-
-// useEffect(() => {
-
-//   const loadSavedArticles = async () => {
-//     try {
-//       const savedArticles = await AsyncStorage.getItem("savedArticles");
-//       const savedArticlesArray = savedArticles
-//         ? JSON.parse(savedArticles)
-//         : [];
-
-//       // Check if each URL in 'urlList' exists in the bookmarked list
-//       const isArticleBookmarkedList = urlList.map((url) =>
-//         savedArticlesArray.some((savedArticle) => savedArticle.url === url)
-//       );
-
-//       // Set the bookmark status for all items based on the loaded data
-//       setBookmarkStatus(isArticleBookmarkedList);
-//       console.log("Check if the current article is in bookmarks");
-//     } catch (error) {
-//       console.log("Error Loading Saved Articles", error);
-//     }
-//   };
-
-//   loadSavedArticles();
-// }, [urlList]);
-
-// contentContainerStyle={{
-//         paddingBottom: hp(110),
-//       }}

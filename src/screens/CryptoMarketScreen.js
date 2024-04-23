@@ -24,7 +24,7 @@ const CryptoMarketScreen = () => {
   }, []);
 
   return (
-    <SafeAreaView className="flex-1 bg-white dark:bg-neutral-900 pt-6">
+    <SafeAreaView className="flex-1 bg-white dark:bg-neutral-900 pt-8">
       <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
       <Header />
       <MiniHeader label="Markets" />

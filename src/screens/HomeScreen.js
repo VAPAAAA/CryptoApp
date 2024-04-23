@@ -41,14 +41,14 @@ export default function HomeScreen() {
           <Loading />
         ) : (
           <View className="">
-            <MiniHeader label="Breaking News" />
-            <BreakingNews label="Breaking News" data={data.articles} />
+            <MiniHeader label="Bitcoin Breaking" />
+            <BreakingNews label="Bitcoin Breaking" data={data.articles} />
           </View>
         )}
 
         {/* Recommended News */}
         <View>
-          <MiniHeader label="Recommended" />
+          <MiniHeader label="Editor's Choice" />
           <ScrollView
             contentContainerStyle={{
               paddingBottom: hp(80),

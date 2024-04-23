@@ -1,7 +1,7 @@
 //Header.js
 import { Switch, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
-import { BellIcon, MagnifyingGlassIcon } from "react-native-heroicons/outline";
+import { MagnifyingGlassIcon } from "react-native-heroicons/outline";
 import { useNavigation } from "@react-navigation/native";
 import { useColorScheme } from "nativewind";
 
