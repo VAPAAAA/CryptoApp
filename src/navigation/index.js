@@ -54,13 +54,9 @@ export default function AppNavigation() {
           tabBarLabelStyle: {
             fontSize: 12,
             fontFamily: "SpaceGroteskMedium",
-            // paddingBottom: 10,
           },
           tabBarStyle: {
             backgroundColor: colorScheme == "dark" ? "black" : "white",
-            // borderTopWidth: 0,
-            // padding: 10,
-            // height: 60,
           },
         })}
       >
@@ -75,12 +71,12 @@ export default function AppNavigation() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="SplashS"
+        initialRouteName="SplashScreen"
         screenOptions={{
           headerShown: false,
         }}
       >
-        <Stack.Screen name="SplashS" component={SplashScreens} />
+        <Stack.Screen name="SplashScreen" component={SplashScreens} />
         <Stack.Screen name="Welcome" component={WelcomeScreen} />
         <Stack.Screen name="Search" component={SearchScreen} />
         <Stack.Screen
@@ -89,7 +85,8 @@ export default function AppNavigation() {
           options={{ animation: "slide_from_bottom" }}
         />
         <Stack.Screen name="HomeTabs" component={TabNavigator} />
-        <Stack.Screen name="CryptoDetails" component={CryptoDetailsScreen} />
+        <Stack.Screen name="CryptoDetails" component={CryptoDetailsScreen}
+          options={{ animation: "slide_from_bottom" }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

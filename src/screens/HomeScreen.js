@@ -18,13 +18,13 @@ export default function HomeScreen() {
   
   // Breaking News
   const { data, isLoading: isBreakingLoading } = useQuery({
-    queryKey: ["breakingNewss"],
+    queryKey: ["breakingNews"],
     queryFn: fetchBreakingNews,
   });
 
   // Recommended News
   const { data: recommendedNew, isLoading: isRecommendedLoading } = useQuery({
-    queryKey: ["recommededNewss"],
+    queryKey: ["recommededNews"],
     queryFn: fetchRecommendedNews,
   });
 
