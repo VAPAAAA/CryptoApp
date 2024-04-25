@@ -1,5 +1,4 @@
 //navigation/index.js
-import { Platform } from "react-native";
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -15,7 +14,6 @@ import CryptoMarketScreen from "../screens/CryptoMarketScreen";
 import CryptoDetailsScreen from "../screens/CryptoDetailsScreen";
 import { useColorScheme } from "nativewind";
 
-const android = Platform.OS === "android";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
