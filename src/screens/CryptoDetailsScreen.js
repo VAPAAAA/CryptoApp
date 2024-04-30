@@ -1,19 +1,52 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ScrollView, View, Text, Image, SafeAreaView } from 'react-native';
 import { useColorScheme } from 'nativewind';
-import cryptoData from '../utils/CryptoData.json'; // Adjust path as needed
-import Header from '../components/Header/Header';
 import MiniHeader from '../components/Header/MiniHeader';
+import HeaderBar from '../components/Header/HeaderBar';
+import Loading from "../components/Loading/Loading"; // Make sure this is your custom loading component
+import CollapsibleText from '../components/CollapsibleText'; // Import the CollapsibleText component
 
 const CryptoDetailsScreen = ({ route }) => {
   const { cryptoId } = route.params;
-  const coin = cryptoData.find(c => c.id === cryptoId); // Find the coin by id
   const { colorScheme } = useColorScheme();
+  const [coin, setCoin] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const url = `https://api.coingecko.com/api/v3/coins/${cryptoId}?localization=false&tickers=false&market_data=true&community_data=false&developer_data=true&sparkline=true`;
+      try {
+        const response = await fetch(url);
+        const json = await response.json();
+        setCoin(json);
+        setIsLoading(false);
+      } catch (err) {
+        setError(err.message);
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [cryptoId]);
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  if (error) {
+    return (
+      <SafeAreaView className="flex-1 bg-white dark:bg-neutral-900">
+        <HeaderBar />
+        <Text className="text-red-500 text-center text-lg dark:text-white">Error: {error}</Text>
+      </SafeAreaView>
+    );
+  }
 
   if (!coin) {
     return (
       <SafeAreaView className="flex-1 bg-white dark:bg-neutral-900">
-        <Header />
+        <HeaderBar />
         <Text className="text-red-500 text-center text-lg dark:text-white">Coin not found!</Text>
       </SafeAreaView>
     );
@@ -21,22 +54,21 @@ const CryptoDetailsScreen = ({ route }) => {
 
   return (
     <SafeAreaView className="flex-1 bg-white dark:bg-neutral-900 pt-8">
-      <Header />
+      <HeaderBar />
       <MiniHeader label={`${coin.name} Details`} />
       <ScrollView className="px-5">
-        <Image source={{ uri: coin.image }} style={{ height: 160, width: 160, alignSelf: 'center' }} />
-        <Text className="text-xl font-bold text-center mt-4 dark:text-white">{coin.name} ({coin.symbol.toUpperCase()})</Text>
-        <View className="mt-6">
-          <Text className="text-base dark:text-white">Current Price: ${coin.current_price.toLocaleString()}</Text>
-          <Text className="text-base dark:text-white">Market Cap: ${coin.market_cap.toLocaleString()}</Text>
-          <Text className="text-base dark:text-white">Volume (24h): ${coin.total_volume.toLocaleString()}</Text>
-          <Text className="text-base dark:text-white">24h High: ${coin.high_24h.toLocaleString()}</Text>
-          <Text className="text-base dark:text-white">24h Low: ${coin.low_24h.toLocaleString()}</Text>
-          <Text className="text-base dark:text-white">Price Change (24h): ${coin.price_change_24h.toFixed(2)}</Text>
-          <Text className="text-base dark:text-white">Market Cap Change (24h): ${coin.market_cap_change_24h.toFixed(2)}</Text>
-          <Text className="text-base dark:text-white">ATH: ${coin.ath.toLocaleString()}</Text>
-          <Text className="text-base dark:text-white">ATL: ${coin.atl.toLocaleString()}</Text>
+        <View className="mt-6 p-4 bg-white dark:bg-neutral-800 rounded-lg shadow">
+          <Text className="text-2xl font-bold text-center mb-4 dark:text-white">{coin.name} ({coin.symbol.toUpperCase()})</Text>
+          <Image source={{ uri: coin.image.large }} className="h-40 w-40 self-center mb-4" />
+          <Text className="text-lg dark:text-white mb-2">Current Price: <Text className="font-semibold">${coin.market_data.current_price.usd.toLocaleString()}</Text></Text>
+          <Text className="text-lg dark:text-white mb-2">Market Cap: <Text className="font-semibold">${coin.market_data.market_cap.usd.toLocaleString()}</Text></Text>
+          <Text className="text-lg dark:text-white mb-2">Volume (24h): <Text className="font-semibold">${coin.market_data.total_volume.usd.toLocaleString()}</Text></Text>
+          <Text className="text-lg dark:text-white mb-2">24h High: <Text className="font-semibold">${coin.market_data.high_24h.usd.toLocaleString()}</Text></Text>
+          <Text className="text-lg dark:text-white mb-2">24h Low: <Text className="font-semibold">${coin.market_data.low_24h.usd.toLocaleString()}</Text></Text>
+          <Text className="text-lg dark:text-white mb-2">Price Change (24h): <Text className="font-semibold">${coin.market_data.price_change_24h_in_currency.usd.toFixed(2)}</Text></Text>
+          <Text className="text-lg dark:text-white">Market Cap Change (24h): <Text className="font-semibold">${coin.market_data.market_cap_change_24h_in_currency.usd.toFixed(2)}</Text></Text>
         </View>
+        <CollapsibleText text={coin.description.en} />
       </ScrollView>
     </SafeAreaView>
   );
