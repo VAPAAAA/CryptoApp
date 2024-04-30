@@ -3,8 +3,8 @@ import { ScrollView, View, Text, Image, SafeAreaView } from 'react-native';
 import { useColorScheme } from 'nativewind';
 import MiniHeader from '../components/Header/MiniHeader';
 import HeaderBar from '../components/Header/HeaderBar';
-import Loading from "../components/Loading/Loading"; // Make sure this is your custom loading component
-import CollapsibleText from '../components/CollapsibleText'; // Import the CollapsibleText component
+import Loading from "../components/Loading/Loading"; 
+import CollapsibleText from '../components/CollapsibleText'; 
 
 const CryptoDetailsScreen = ({ route }) => {
   const { cryptoId } = route.params;

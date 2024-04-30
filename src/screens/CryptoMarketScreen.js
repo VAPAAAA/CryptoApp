@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, View, Text, Image, TouchableOpacity, SafeAreaView, StatusBar } from 'react-native';
+import { ScrollView, View, Text, Image, TouchableOpacity, SafeAreaView, StatusBar, RefreshControl } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -13,43 +13,50 @@ const CryptoMarketScreen = () => {
   const { colorScheme } = useColorScheme();
   const [cryptoData, setCryptoData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const BASE_URL = 'https://api.coingecko.com/api/v3/coins/markets';
 
-  const fetchMarketData = async () => {
-    const cachedData = await AsyncStorage.getItem('cryptoData');
-    if (cachedData) {
-      setCryptoData(JSON.parse(cachedData));
-      setIsLoading(false);
-      console.log('Data loaded from cache');
-    } else {
-      try {
-        const response = await axios.get(BASE_URL, {
-          params: {
-            vs_currency: 'usd',
-            order: 'market_cap_desc',
-            per_page: 50,
-            page: 1,
-            sparkline: false
-          }
-        });
-        if (response.data) {
-          setCryptoData(response.data);
-          await AsyncStorage.setItem('cryptoData', JSON.stringify(response.data));
-          console.log('Data fetched and cached');
-        } else {
-          console.log("No data received");
-        }
+  const fetchMarketData = async (forceUpdate = false) => {
+    if (!forceUpdate) {
+      const cachedData = await AsyncStorage.getItem('cryptoData');
+      if (cachedData) {
+        setCryptoData(JSON.parse(cachedData));
         setIsLoading(false);
-      } catch (error) {
-        console.error('Error fetching market data from CoinGecko:', error);
-        setIsLoading(false);
+        return;
       }
+    }
+    try {
+      const response = await axios.get(BASE_URL, {
+        params: {
+          vs_currency: 'usd',
+          order: 'market_cap_desc',
+          per_page: 50,
+          page: 1,
+          sparkline: false
+        }
+      });
+      if (response.data) {
+        setCryptoData(response.data);
+        await AsyncStorage.setItem('cryptoData', JSON.stringify(response.data));
+      } else {
+        console.log("No data received");
+      }
+    } catch (error) {
+      console.error('Error fetching market data from CoinGecko:', error);
+    } finally {
+      setIsLoading(false);
+      setRefreshing(false);
     }
   };
 
   useEffect(() => {
     fetchMarketData();
   }, []);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    fetchMarketData(true);
+  };
 
   if (isLoading) {
     return (
@@ -67,7 +74,16 @@ const CryptoMarketScreen = () => {
       <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
       <Header />
       <MiniHeader label="Markets" />
-      <ScrollView className="px-4">
+      <ScrollView
+        className="px-4"
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={['#9Bd35A', '#689F38']}
+          />
+        }
+      >
         {cryptoData.map((item) => (
           <TouchableOpacity key={item.id} onPress={() => {
             navigation.navigate('CryptoDetails', { cryptoId: item.id })

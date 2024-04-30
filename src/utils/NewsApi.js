@@ -7,7 +7,7 @@ import axios from "axios";
 const apiBaseUrl = "https://newsapi.org/v2";
 
 const breakingKeywords = "bitcoin";
-const recommendedKeywords = "crypto OR cryptocurrency OR ethereum OR litecoin NOT bitcoin";
+const recommendedKeywords = "crypto OR cryptocurrency OR ethereum OR litecoin";
 const pageSize = 10;  // Limit the number of articles to 10
 
 const breakingNewsUrl = `${apiBaseUrl}/everything?q=${encodeURIComponent(breakingKeywords)}&sortBy=publishedAt&pageSize=${pageSize}&apiKey=${newsApiKey}`;
