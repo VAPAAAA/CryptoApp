@@ -31,9 +31,9 @@ export default function AppNavigation() {
             if (route.name === "Home") {
               iconName = "home";
             } else if (route.name === "Markets") {
-              iconName = "wallet-outline"; 
+              iconName = "bar-chart-outline"; 
             } else if (route.name === "Saved") {
-              iconName = "bookmark-outline";
+              iconName = "star-outline";
             } else if (route.name === "Search") {
               iconName = "search-outline";
             }

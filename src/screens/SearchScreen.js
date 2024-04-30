@@ -51,7 +51,7 @@ export default function SearchScreen() {
       <View className="mx-4 mb-3 mt-12 flex-row p-2 justify-between items-center bg-neutral-100 rounded-lg">
         <TextInput
           onChangeText={handleTextDebounce}
-          placeholder="Search for your news"
+          placeholder="Explore Blockchain news"
           placeholderTextColor={"gray"}
           className=" font-medium text-black tracking-wider p-3 py-1 w-[90%] "
         />
@@ -68,7 +68,7 @@ export default function SearchScreen() {
             fontFamily: "SpaceGroteskBold",
           }}
         >
-          {results?.length} News for {searchTerm}
+          {results?.length} Results for {searchTerm}
         </Text>
       </View>
 

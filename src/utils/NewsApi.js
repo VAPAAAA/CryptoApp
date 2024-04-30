@@ -14,8 +14,9 @@ const breakingNewsUrl = `${apiBaseUrl}/everything?q=${encodeURIComponent(breakin
 const recommendedNewsUrl = `${apiBaseUrl}/everything?q=${encodeURIComponent(recommendedKeywords)}&sortBy=relevancy&pageSize=${pageSize}&apiKey=${newsApiKey}`;
 
 
-const searchNewsUrl = (query) =>
-  `${apiBaseUrl}/everything?q=${query}&apiKey=${newsApiKey}`;
+const searchNewsUrl = (query, pageSize = 25) =>
+`${apiBaseUrl}/everything?q=${query}&pageSize=${pageSize}&apiKey=${newsApiKey}`;
+
 
 const newsApiCall = async (endpoints, params) => {
   const options = {
