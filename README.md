@@ -1,8 +1,8 @@
 # Configuration
-Setting Up Your API Key
+### Setting Up Your API Key
 This application requires an API key to fetch data from its respective API provider. You need to replace the placeholder API key with a valid one to ensure the application functions correctly.
 
-Steps to Configure Your API Key:
+### Steps to Configure Your API Key:
 1. Obtain an API Key: 
 Visit the website of the API provider. https://newsapi.org/
 Register or sign in and follow their process to obtain an API key.
@@ -19,7 +19,7 @@ export const newsApiKey = "INSERT_YOUR_API_KEY_HERE";
 Save the changes to the ApiKey.js file. 
 Restart your application to ensure it uses the new API key.
 
-Running the Application
+### Running the Application
 To run the application on your local machine, follow these steps:
 
 ```
