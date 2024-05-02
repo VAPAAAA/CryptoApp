@@ -1,3 +1,4 @@
+// Imports necessary React components and hooks, external libraries, and custom components
 import React, { useEffect, useState } from 'react';
 import { ScrollView, View, Text, Image, TouchableOpacity, SafeAreaView, StatusBar, RefreshControl } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
@@ -8,7 +9,9 @@ import MiniHeader from '../components/Header/MiniHeader';
 import Loading from "../components/Loading/Loading";
 import { useColorScheme } from 'nativewind';
 
+// Defines the CryptoMarketScreen functional component
 const CryptoMarketScreen = () => {
+  // State hooks for navigation, theme color scheme, and data management
   const navigation = useNavigation();
   const { colorScheme } = useColorScheme();
   const [cryptoData, setCryptoData] = useState([]);
@@ -16,7 +19,9 @@ const CryptoMarketScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
   const BASE_URL = 'https://api.coingecko.com/api/v3/coins/markets';
 
+  // Function to fetch market data from CoinGecko API or cache
   const fetchMarketData = async (forceUpdate = false) => {
+    // Checks and loads data from AsyncStorage to reduce API calls
     if (!forceUpdate) {
       const cachedData = await AsyncStorage.getItem('cryptoData');
       if (cachedData) {
@@ -25,6 +30,7 @@ const CryptoMarketScreen = () => {
         return;
       }
     }
+    // Fetches data from the CoinGecko API when no cache is available or if a force update is required
     try {
       const response = await axios.get(BASE_URL, {
         params: {
@@ -35,6 +41,7 @@ const CryptoMarketScreen = () => {
           sparkline: false
         }
       });
+      // Updates the local state and cache with the new data
       if (response.data) {
         setCryptoData(response.data);
         await AsyncStorage.setItem('cryptoData', JSON.stringify(response.data));
@@ -49,15 +56,18 @@ const CryptoMarketScreen = () => {
     }
   };
 
+  // Effect hook to load data when the component mounts
   useEffect(() => {
     fetchMarketData();
   }, []);
 
+  // Pull-to-refresh handler to update the cryptocurrency data
   const onRefresh = () => {
     setRefreshing(true);
     fetchMarketData(true);
   };
 
+  // Conditional rendering for the loading state
   if (isLoading) {
     return (
       <SafeAreaView className="flex-1 bg-white dark:bg-neutral-900 pt-8">
@@ -69,6 +79,7 @@ const CryptoMarketScreen = () => {
     );
   }
 
+  // Main component layout rendering cryptocurrency market data
   return (
     <SafeAreaView className="flex-1 bg-white dark:bg-neutral-900 pt-8">
       <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />

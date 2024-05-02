@@ -1,57 +1,63 @@
-//HomeScreen.js
+// Import necessary React and React Native components
 import { View, ScrollView } from "react-native";
-import React, { useState } from "react";
+import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useColorScheme } from "nativewind";
 import { StatusBar } from "expo-status-bar";
+import { useColorScheme } from "nativewind";
+import { useQuery } from "@tanstack/react-query";
+import { heightPercentageToDP as hp } from "react-native-responsive-screen";
+
+// Import custom components and utility functions
 import Loading from "../components/Loading/Loading";
 import Header from "../components/Header/Header";
-import NewsSection from "../components/NewsSection/NewsSection";
-import { useQuery } from "@tanstack/react-query";
-import { fetchBreakingNews, fetchRecommendedNews } from "../utils/NewsApi";
 import MiniHeader from "../components/Header/MiniHeader";
-import { heightPercentageToDP as hp } from "react-native-responsive-screen";
+import NewsSection from "../components/NewsSection/NewsSection";
 import BreakingNews from "../components/BreakingNews";
+import { fetchBreakingNews, fetchRecommendedNews } from "../utils/NewsApi";
 
+// Define the HomeScreen component
 export default function HomeScreen() {
-  const { colorScheme, toggleColorScheme } = useColorScheme();
-  
-  // Breaking News
+  // Use the color scheme hook for theme management
+  const { colorScheme } = useColorScheme();
+
+  // Fetch breaking news using react-query
   const { data, isLoading: isBreakingLoading } = useQuery({
     queryKey: ["breakingNews"],
     queryFn: fetchBreakingNews,
   });
 
-  // Recommended News
+  // Fetch recommended news
   const { data: recommendedNew, isLoading: isRecommendedLoading } = useQuery({
     queryKey: ["recommededNews"],
     queryFn: fetchRecommendedNews,
   });
 
+  // Main render method
   return (
-    <SafeAreaView className=" flex-1 bg-white dark:bg-neutral-900">
-      <StatusBar style={colorScheme == "dark" ? "light" : "dark"} />
+    <SafeAreaView className="flex-1 bg-white dark:bg-neutral-900">
+      <StatusBar style={colorScheme === "dark" ? "light" : "dark"} /> 
 
+      {/* Main container */}
       <View>
-        {/* Header */}
+        {/* App header */}
         <Header />
 
-        {/* Breaking News */}
+        {/* Section for breaking news */}
         {isBreakingLoading ? (
           <Loading />
         ) : (
-          <View className="">
+          <View className=" ">
             <MiniHeader label="Bitcoin Breaking" />
             <BreakingNews label="Bitcoin Breaking" data={data.articles} />
           </View>
         )}
 
-        {/* Recommended News */}
+        {/* Section for recommended news */}
         <View>
           <MiniHeader label="Editor's Choice" />
           <ScrollView
             contentContainerStyle={{
-              paddingBottom: hp(80),
+              paddingBottom: hp(80), // Responsive padding
             }}
           >
             {isRecommendedLoading ? (

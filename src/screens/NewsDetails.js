@@ -1,4 +1,5 @@
-//NewsDetails.js
+// Import necessary React and React Native components
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -6,82 +7,70 @@ import {
   TouchableOpacity,
   Dimensions,
 } from "react-native";
-import React, { useEffect, useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { WebView } from "react-native-webview";
 import { ChevronLeftIcon, ShareIcon } from "react-native-heroicons/outline";
 import { BookmarkSquareIcon } from "react-native-heroicons/solid";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+// Retrieve device window dimensions
 const { height, width } = Dimensions.get("window");
 
+// Define the NewsDetails functional component to display detailed news articles
 export default function NewsDetails() {
-  const { params: item } = useRoute();
-  const [visible, setVisible] = useState(false);
-  const navigation = useNavigation();
-  const [isBookmarked, toggleBookmark] = useState(false);
+  const navigation = useNavigation(); // Hook to navigate between screens
+  const { params: item } = useRoute(); // Extract navigation params to access article details
+  const [visible, setVisible] = useState(false); // State to control visibility of the activity indicator
+  const [isBookmarked, toggleBookmark] = useState(false); // State to track bookmark status of the article
 
-  // console.log("item URL", item.url);
-
+  // Function to toggle the bookmark status and update storage accordingly
   const toggleBookmarkAndSave = async () => {
     try {
-      // Check if News Article is already in Storage
+      // Retrieve saved articles from local storage
       const savedArticles = await AsyncStorage.getItem("savedArticles");
       let savedArticlesArray = savedArticles ? JSON.parse(savedArticles) : [];
-      // console.log("Check if the article is already bookmarked");
 
-      // Check if the article is already in the bookmarked list
+      // Check if the article is already bookmarked
       const isArticleBookmarked = savedArticlesArray.some(
-        (savedArticle) => savedArticle.url === item.url
+        savedArticle => savedArticle.url === item.url
       );
 
-      // console.log("Check if the article is already in the bookmarked list");
-
       if (!isArticleBookmarked) {
-        // If the article is not bookmarked, add it to the bookmarked list
+        // If not bookmarked, add to the list and update the state
         savedArticlesArray.push(item);
         await AsyncStorage.setItem(
           "savedArticles",
           JSON.stringify(savedArticlesArray)
         );
         toggleBookmark(true);
-        // console.log("Article is bookmarked");
       } else {
-        // If the article is already bookmarked, remove it from the list
+        // If bookmarked, remove from the list and update the state
         const updatedSavedArticlesArray = savedArticlesArray.filter(
-          (savedArticle) => savedArticle.url !== item.url
+          savedArticle => savedArticle.url !== item.url
         );
         await AsyncStorage.setItem(
           "savedArticles",
           JSON.stringify(updatedSavedArticlesArray)
         );
         toggleBookmark(false);
-        // console.log("Article is removed from bookmarks");
       }
     } catch (error) {
-      console.log("Error Saving Article", error);
+      console.error("Error saving or removing article from bookmarks", error);
     }
   };
 
+  // Effect to check bookmark status on component mount
   useEffect(() => {
-    // Load saved articles from AsyncStorage when the component mounts
     const loadSavedArticles = async () => {
-      try {
-        const savedArticles = await AsyncStorage.getItem("savedArticles");
-        const savedArticlesArray = savedArticles
-          ? JSON.parse(savedArticles)
-          : [];
+      const savedArticles = await AsyncStorage.getItem("savedArticles");
+      const savedArticlesArray = savedArticles ? JSON.parse(savedArticles) : [];
 
-        // Check if the article is already in the bookmarked list
-        const isArticleBookmarked = savedArticlesArray.some(
-          (savedArticle) => savedArticle.url === item.url
-        );
+      // Determine bookmark status for the current article
+      const isArticleBookmarked = savedArticlesArray.some(
+        savedArticle => savedArticle.url === item.url
+      );
 
-        toggleBookmark(isArticleBookmarked);
-        // console.log("Check if the current article is in bookmarks");
-      } catch (error) {
-        console.log("Error Loading Saved Articles", error);
-      }
+      toggleBookmark(isArticleBookmarked);
     };
 
     loadSavedArticles();
@@ -89,45 +78,35 @@ export default function NewsDetails() {
 
   return (
     <>
+      {/* Top navigation bar with back and share/bookmark actions */}
       <View className="w-full flex-row justify-between items-center px-4 pt-10 pb-4 bg-white">
-        <View className="bg-gray-100 p-2 rounded-full items-center justify-center">
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <ChevronLeftIcon size={25} strokeWidth={3} color="gray" />
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity onPress={() => navigation.goBack()} className="bg-gray-100 p-2 rounded-full items-center justify-center">
+          <ChevronLeftIcon size={25} strokeWidth={3} color="gray" />
+        </TouchableOpacity>
 
-        <View className="space-x-3 rounded-full items-center justify-center flex-row">
+        <View className="space-x-3 flex-row items-center justify-center">
           <TouchableOpacity className="bg-gray-100 p-2 rounded-full">
             <ShareIcon size={25} color="gray" strokeWidth={2} />
           </TouchableOpacity>
-          <TouchableOpacity
-            className="bg-gray-100 p-2 rounded-full"
-            onPress={toggleBookmarkAndSave}
-          >
-            <BookmarkSquareIcon
-              size={25}
-              color={isBookmarked ? "green" : "gray"}
-              strokeWidth={2}
-            />
+          <TouchableOpacity onPress={toggleBookmarkAndSave} className="bg-gray-100 p-2 rounded-full">
+            <BookmarkSquareIcon size={25} color={isBookmarked ? "green" : "gray"} strokeWidth={2} />
           </TouchableOpacity>
         </View>
       </View>
-      {/* WebView */}
+
+      {/* WebView to render the news article */}
       <WebView
         source={{ uri: item.url }}
         onLoadStart={() => setVisible(true)}
         onLoadEnd={() => setVisible(false)}
       />
 
+      {/* Display a spinner while the WebView is loading */}
       {visible && (
         <ActivityIndicator
-          size={"large"}
-          color={"green"}
-          style={{
-            position: "absolute",
-            top: height / 2,
-            left: width / 2,
-          }}
+          size="large"
+          color="green"
+          style={{ position: "absolute", top: height / 2 - 10, left: width / 2 - 10 }}
         />
       )}
     </>

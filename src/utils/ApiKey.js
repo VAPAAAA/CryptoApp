@@ -1,4 +1,4 @@
-// ApiKey.js
-export const newsApiKey = "e80ea1c0af0b4bd5ada66dacbce4038a";
+// INSERT YOUR NEWS API KEY HERE
+export const newsApiKey = "INSERT_YOUR_API_KEY_HERE";
 
 
