@@ -1,4 +1,4 @@
-Configuration
+# Configuration
 Setting Up Your API Key
 This application requires an API key to fetch data from its respective API provider. You need to replace the placeholder API key with a valid one to ensure the application functions correctly.
 
