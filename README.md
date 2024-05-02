@@ -10,8 +10,8 @@ Register or sign in and follow their process to obtain an API key.
 Open the ApiKey.js file located in the src directory of this project.
 Replace the placeholder "INSERT_YOUR_API_KEY_HERE" with your actual API key.
 
-```
 /src/utils/ApiKey.js
+```
 // INSERT YOUR NEWS API KEY HERE
 export const newsApiKey = "INSERT_YOUR_API_KEY_HERE";
 ```
