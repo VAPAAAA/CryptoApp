@@ -11,12 +11,12 @@ Open the ApiKey.js file located in the src directory of this project.
 Replace the placeholder "INSERT_YOUR_API_KEY_HERE" with your actual API key.
 
 ```
-ApiKey.js
+/src/utils/ApiKey.js
 // INSERT YOUR NEWS API KEY HERE
 export const newsApiKey = "INSERT_YOUR_API_KEY_HERE";
 ```
 3. Save and Restart Your Application:
-Save the changes to the ApiKey.js file.
+Save the changes to the ApiKey.js file. 
 Restart your application to ensure it uses the new API key.
 
 Running the Application
